@@ -1,3 +1,9 @@
+"""Лабораторна робота 5: класи Fruit і FruitSalad.
+
+Модуль містить класи для опису фруктів і фруктового салату
+з автоматичним вибором топінгу за смаком фруктів.
+"""
+
 import random
 from collections import Counter
 from enum import Enum
@@ -46,8 +52,7 @@ class Fruit:
 
     def __del__(self):
         """Деструктор фрукта."""
-        print("[-] Видалено фрукт: "
-              f"{getattr(self, '_name', 'невідомо')}")
+        print(f"[-] Видалено фрукт: {getattr(self, '_name', 'невідомо')}")
 
     @property
     def name(self):
@@ -56,6 +61,8 @@ class Fruit:
 
     @name.setter
     def name(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Назва має бути рядком")
         if not value.strip():
             raise ValueError("Назва не може бути порожньою")
         self._name = value
@@ -67,6 +74,8 @@ class Fruit:
 
     @size.setter
     def size(self, value):
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError("Розмір має бути числом")
         if value <= 0:
             raise ValueError("Розмір має бути додатним")
         self._size = value
@@ -78,6 +87,8 @@ class Fruit:
 
     @color.setter
     def color(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Колір має бути рядком")
         if not value.strip():
             raise ValueError("Колір не може бути порожнім")
         self._color = value
@@ -94,8 +105,7 @@ class Fruit:
         self._taste = value
 
     def __str__(self):
-        return (f"{self._name}, {self._size} см, {self._color},"
-                f" {self._taste.value}")
+        return f"{self.name}, {self.size} см, {self.color}, {self.taste.value}"
 
     def display(self):
         """Виводить інформацію про фрукт."""
@@ -107,7 +117,9 @@ class FruitSalad:
 
     def __init__(self, fruits=None, topping=None):
         """Конструктор: список фруктів і топінг необов'язкові."""
-        self._fruits = list(fruits) if fruits else []
+        self._fruits = []
+        for fruit in fruits or []:
+            self.add_fruit(fruit)
         self.topping = topping
         print("[+] Створено салат")
 
@@ -161,11 +173,11 @@ class FruitSalad:
         print("Фруктовий салат:")
         for number, fruit in enumerate(self._fruits, start=1):
             print(f"  {number}. {fruit}")
-        if self._topping is None:
+        topping = self._topping
+        if topping is None:
             print("  Топінг: відсутній")
         else:
-            print(f"  Топінг: {self._topping.title} "
-                  f"({self._topping.taste.value})")
+            print(f"  Топінг: {topping.title} ({topping.taste.value})")
 
 
 def main():
@@ -184,6 +196,18 @@ def main():
     try:
         Fruit("слива", -3, "синій", Taste.SWEET)
     except ValueError as error:
+        print(f"Помилка: {error}")
+    try:
+        Fruit(None, 5, "синій", Taste.SWEET)
+    except TypeError as error:
+        print(f"Помилка: {error}")
+    try:
+        Fruit("слива", "5", "синій", Taste.SWEET)
+    except TypeError as error:
+        print(f"Помилка: {error}")
+    try:
+        FruitSalad(["не фрукт"])
+    except TypeError as error:
         print(f"Помилка: {error}")
 
     print("\n--- Салат ---")
