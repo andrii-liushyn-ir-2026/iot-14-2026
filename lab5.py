@@ -61,6 +61,7 @@ class Fruit:
 
     @name.setter
     def name(self, value):
+        """Встановлює назву фрукта."""
         if not isinstance(value, str):
             raise TypeError("Назва має бути рядком")
         if not value.strip():
@@ -74,6 +75,7 @@ class Fruit:
 
     @size.setter
     def size(self, value):
+        """Встановлює розмір фрукта."""
         if isinstance(value, bool) or not isinstance(value, (int, float)):
             raise TypeError("Розмір має бути числом")
         if value <= 0:
@@ -87,6 +89,7 @@ class Fruit:
 
     @color.setter
     def color(self, value):
+        """Встановлює колір фрукта."""
         if not isinstance(value, str):
             raise TypeError("Колір має бути рядком")
         if not value.strip():
@@ -100,11 +103,13 @@ class Fruit:
 
     @taste.setter
     def taste(self, value):
+        """Встановлює смак фрукта."""
         if not isinstance(value, Taste):
             raise TypeError("Смак має бути елементом Taste")
         self._taste = value
 
     def __str__(self):
+        """Повертає текстовий опис фрукта."""
         return f"{self.name}, {self.size} см, {self.color}, {self.taste.value}"
 
     def display(self):
@@ -139,6 +144,7 @@ class FruitSalad:
 
     @topping.setter
     def topping(self, value):
+        """Встановлює топінг салату."""
         if value is not None and not isinstance(value, Topping):
             raise TypeError("Топінг має бути елементом Topping")
         self._topping = value
@@ -157,11 +163,11 @@ class FruitSalad:
         """
         counts = Counter(fruit.taste for fruit in self._fruits)
         if counts[Taste.SOUR] > counts[Taste.SWEET]:
-            self._topping = Topping.HONEY
+            self.topping = Topping.HONEY
         elif counts[Taste.SWEET] > counts[Taste.SOUR]:
-            self._topping = Topping.LEMON_JUICE
+            self.topping = Topping.LEMON_JUICE
         else:
-            self._topping = Topping.YOGURT
+            self.topping = Topping.YOGURT
         return self._topping
 
     def shuffle(self):
